@@ -70,7 +70,8 @@ if __name__ == '__main__':
     
 
     tr_X, tr_Y, te_X, te_Y = data
-    print "I/O shapes:",tr_X.shape, tr_Y.shape, te_X.shape, te_Y.shape
+    print ("I/O shapes:",tr_X.shape, tr_Y.shape, te_X.shape, te_Y.shape)
+    # I/O shapes: (100000, 128) (100000, 51) (2000, 128) (2000, 51)
 
     h_units = 200
     num_h_layers = 5
@@ -103,7 +104,7 @@ if __name__ == '__main__':
 
     fname = name+".hdf5"
     callback_list = ml_core.get_callbacks(0.001, fname, 50, 0.01)
-    print "setting:",name
+    # print "setting:",name
 
     model = ml_core.get_model(in_dim, out_dim, h_units, num_h_layers, activation, optimizer, loss_name, act_in, act_out, learning_rate=lr)
 
@@ -117,8 +118,12 @@ if __name__ == '__main__':
         callbacks=callback_list
         )
     y_act = te_Y.todense()
+    import time
+    start = time.time()
     y_pred = model.predict(te_X)
+    ref_t = time.time() - start
+    print('Time:', ref_t)
     plot_1D_decompose_pred(y_act, y_pred, name+".png")
 
     keras.backend.clear_session()
-    print "------"
+    # print "------"

@@ -4,7 +4,10 @@ import random
 import bisect
 from scipy.sparse import csr_matrix
 from scipy.ndimage import gaussian_filter
-import RF_common
+# import .RF_common
+from modules import RF_common
+
+# from RF_common import RF_common
 
 def to_complex(chans):
     '''
@@ -12,9 +15,9 @@ def to_complex(chans):
     valued by reversing the processing in fn to_reals()
     '''
     if chans.shape[1]%2 != 0:
-        print "ERROR:cannot convert odd #cols to complex"
+        # print "ERROR:cannot convert odd #cols to complex"
         return None
-    mid = chans.shape[1]/2
+    mid = int(chans.shape[1]/2)
     real = chans[:,:mid]
     real = np.array(real)
     imag = chans[:,mid:]
@@ -47,7 +50,7 @@ def get_params_multi_proc(n_chans, max_n_paths, max_d, n_processes, min_d, min_n
     multiple processors are used and their results are combined.
     '''
     p = Pool(processes=n_processes)
-    num_chans = n_chans/n_processes
+    num_chans = int(n_chans/n_processes)
     results = []
     for i in range(n_processes):
         results.append(p.apply_async(get_params, args=(num_chans, max_n_paths, max_d, min_d, min_n_paths, sep)))
@@ -81,7 +84,7 @@ def get_array_chans_multi_proc(lambs, K, sep, params_list, n_processes, norm):
     '''
     p = Pool(processes=n_processes)
     num_chans = len(params_list)
-    num_chans_per_proc = num_chans/n_processes
+    num_chans_per_proc = int(num_chans/n_processes)
     results = []
     for i in range(n_processes):
         start = i*num_chans_per_proc
@@ -148,7 +151,7 @@ def nn_batch_generator_convolved(X_dense, y_sparse, batch_size, conv_filter):
     useful if y is extremly large but sparse
     '''
     samples_per_epoch = X_dense.shape[0]
-    number_of_batches = samples_per_epoch/batch_size
+    number_of_batches = int(samples_per_epoch/batch_size)
     counter=0
     index = np.arange(np.shape(X_dense)[0])
 
